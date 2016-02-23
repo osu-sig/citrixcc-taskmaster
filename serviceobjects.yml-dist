@@ -1,0 +1,44 @@
+services:
+    -
+        name: exampleservicename
+        tasks:
+            - enable_server
+            - enable_monitor
+            - enable_servicegroup
+            - enable_lb_vserver
+            - bind_servicegroup_server
+            - bind_servicegroup_monitor
+            - bind_lb_vserver_servicegroup
+        servers:
+            -
+                name: example1
+                ip: 10.0.0.1
+            -
+                name: example2
+                ip: 10.0.0.2
+            -
+                name: example3
+                ip: 10.0.0.3
+        monitors:
+            - monitor_ex_1
+            - monitor_ex_2
+        servicegroups:
+            - sg_ex_1
+            - sg_ex_2
+            - sg_ex_3
+        lb_vservers:
+            - lb_ex_1
+            - lb_ex_2
+            - lb_ex_3
+            - lb_ex_4
+    -
+        name: anotherservice
+        tasks:
+            - enable_server
+        servers:
+            -
+                name: something1
+                ip: 10.0.1.1
+            -
+                name: something2
+                ip: 10.0.1.2

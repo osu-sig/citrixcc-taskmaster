@@ -1,0 +1,3 @@
+endpoint_base: https://cmdctr-vp01.sig.oregonstate.edu/nitro/v1/
+username: changeme
+password: changeme
