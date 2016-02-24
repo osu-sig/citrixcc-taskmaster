@@ -1,0 +1,53 @@
+name: {{service['name']}}_bind_servicegroup_server
+description: bind/unbind {{service['name']}} servicegroup with a server
+owner: root
+classification: custom
+category: DEV
+sequential: false
+enable_auto_rollBack: true
+enable_rba: false
+secondary_first: false
+cmd_list:
+    -
+        command: $command$ serviceGroup $servicegroupname$ $servername$ $portvalue$
+        protocol: SSH
+        rollback_command: ''
+        target: ''
+        status: false
+        seq_no: 1
+task_variable_list:
+    -
+        name: command
+        type: choice
+        display_name: Command
+        default_value: bind
+        tag: UserInput
+        possible_values: bind,unbind
+    -
+        name: servicegroupname
+        type: choice
+        display_name: ServiceGroup
+        default_value: x
+        tag: UserInput
+        possible_values: {{ service['servicegroups']|join(',') }}
+    -
+        name: servername
+        type: choice
+        display_name: Server
+        default_value: x
+        tag: UserInput
+        possible_values: {{ service['servers']|join(',', attribute='name') }}
+    -
+        name: portvalue
+        type: textfield
+        display_name: Port
+        default_value: ''
+        tag: UserInput
+        possible_values: ''
+use_cm_credentials: false
+device_type: ''
+device_family: NS
+on_inaccessible_also: false
+do_save_config: true
+proceed_on_failure: false
+proceed_on_devices_on_failure: false

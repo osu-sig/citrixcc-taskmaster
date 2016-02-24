@@ -1,0 +1,46 @@
+name: {{service['name']}}_bind_lb_vserver_servicegroup
+description: bind/unbind {{service['name']}} lb vserver to servicegroup
+owner: root
+classification: custom
+category: DEV
+sequential: false
+enable_auto_rollBack: true
+enable_rba: false
+secondary_first: false
+cmd_list:
+    -
+        command: $command$ lb vserver $vservername$ $servicegroupname$
+        protocol: SSH
+        rollback_command: ''
+        target: ''
+        status: false
+        seq_no: 1
+task_variable_list:
+    -
+        name: command
+        type: choice
+        display_name: Command
+        default_value: bind
+        tag: UserInput
+        possible_values: bind,unbind
+    -
+        name: vservername
+        type: choice
+        display_name: VirtualServer
+        default_value: x
+        tag: UserInput
+        possible_values: {{ service['lb_vservers']|join(',') }}
+    -
+        name: servicegroupname
+        type: choice
+        display_name: ServiceGroup
+        default_value: x
+        tag: UserInput
+        possible_values: {{ service['servicegroups']|join(',') }}
+use_cm_credentials: false
+device_type: ''
+device_family: NS
+on_inaccessible_also: false
+do_save_config: true
+proceed_on_failure: false
+proceed_on_devices_on_failure: false
