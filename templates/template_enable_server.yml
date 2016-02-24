@@ -1,5 +1,5 @@
-name: '{}_enable_server'
-description: enable/disable servers
+name: {{service['name']}}_enable_server
+description: enable/disable {{service['name']}} servers
 owner: root
 classification: custom
 category: DEV
@@ -29,7 +29,7 @@ task_variable_list:
         display_name: Server
         default_value: x
         tag: UserInput
-        possible_values: server1.o.e,server2.o.e,server3.o.e
+        possible_values: {{ service['servers']|join(',', attribute='name') }}
 use_cm_credentials: false
 device_type: ''
 device_family: NS

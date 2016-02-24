@@ -2,26 +2,26 @@ import os, sys, json, pprint
 import yaml
 import requests
 from requests.auth import HTTPBasicAuth
+from jinja2 import Environment, FileSystemLoader
 
 pp = pprint.PrettyPrinter()
 SCRIPTPATH = os.path.dirname(os.path.abspath(__file__))
+JINENV = Environment(loader = FileSystemLoader('templates'))
 
-try:
-    configfile = open(SCRIPTPATH + '/config.yml', 'r')
-except IOError:
-    print 'Missing config file config.yml'
-    sys.exit()
-else:
+with open(SCRIPTPATH + '/config.yml', 'r') as configfile:
     config = yaml.load(configfile.read())
     USERNAME = config['username']
     PASSWORD = config['password']
     ENDPOINT_BASE = config['endpoint_base']
 
 def main(argv):
-    taskfile = open(SCRIPTPATH + '/templates/template_enable_server.yml', 'r')
-    task = yaml.load(taskfile.read())
-    task['name'] = task['name'].format('testo')
-    payload = { 'ns_task': task }
+    with open(SCRIPTPATH + '/serviceobjects.yml', 'r') as servicefile:
+        services = yaml.load(servicefile.read())['services']
+    create_task('enable_server', services[0])
+
+def create_task(taskname, service):
+    template = JINENV.get_template('template_{}.yml'.format(taskname))
+    payload = { 'ns_task': yaml.load(template.render(service=service)) }
     rc = call_api('configuration/ns_task', payload)
     if rc['errorcode'] != 0:
         raise Exception('POST {0}{1} - errorcode: {2} {3}'.format(ENDPOINT_BASE, 'configuration/ns_task', rc['errorcode'], rc['message']))
