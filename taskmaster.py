@@ -66,10 +66,12 @@ def create_all_tasks():
             print 'created task {}_{}'.format(service['name'], task)
 
 def delete_all_tasks():
-    for service in services:
-        for task in service['tasks']:
-            cc_delete_task('{}_{}'.format(service['name'], task))
-            print 'deleted task {}_{}'.format(service['name'], task)
+    payload = { 'filter': 'classification:custom' }
+    resp = requests.get(ENDPOINT_BASE + 'configuration/ns_task', params=payload, auth=(USERNAME, PASSWORD))
+    result = resp.json()
+    for task in result['ns_task']:
+        if task['category'] != 'ADMIN_USE_ONLY':
+            delete_task(task['name'])
 
 def cc_create_task(tasksuffix, service):
     template = JINENV.get_template('template_{}.yml'.format(tasksuffix))
