@@ -1,0 +1,39 @@
+name: {{service['name']}}_disable_server_graceful
+description: disable {{service['name']}} servers gracefully
+owner: root
+classification: custom
+category: DEV
+sequential: false
+enable_auto_rollBack: true
+enable_rba: false
+secondary_first: false
+cmd_list:
+    -
+        command: disable server $servername$ $delay$ -graceFul YES
+        protocol: SSH
+        rollback_command: ''
+        target: ''
+        status: false
+        seq_no: 1
+task_variable_list:
+    -
+        name: servername
+        type: choice
+        display_name: Server
+        default_value: x
+        tag: UserInput
+        possible_values: {{ service['servers']|join(',', attribute='name') }}
+    -
+        name: delay
+        type: numerictextfield
+        display_name: Delay (seconds)
+        default_value: 0
+        tag: UserInput
+        possible_values: ''
+use_cm_credentials: false
+device_type: ''
+device_family: NS
+on_inaccessible_also: false
+do_save_config: true
+proceed_on_failure: false
+proceed_on_devices_on_failure: false
