@@ -10,7 +10,9 @@ JINENV = Environment(loader = FileSystemLoader('templates'))
 
 # load serviceobjects
 with open(SCRIPTPATH + '/serviceobjects.yml', 'r') as servicefile:
-    services = yaml.load(servicefile.read())['services']
+    serviceobjects = yaml.load(servicefile.read())
+services = serviceobjects['services']
+groups = serviceobjects['groups']
 
 # load configuration
 with open(SCRIPTPATH + '/config.yml', 'r') as configfile:
@@ -22,11 +24,11 @@ with open(SCRIPTPATH + '/config.yml', 'r') as configfile:
 # setup command line options
 parser = argparse.ArgumentParser(description='Manage Citrix Command Center custom tasks', epilog='If a specific TASK is not specified, all tasks will be recreated.')
 group = parser.add_mutually_exclusive_group()
+group.add_argument('-g', '--group', help='generate config values for provided group')
 group.add_argument('-c', '--create', help='task to create (use name in Command Center, ex: lync_enable_server)')
 group.add_argument('-d', '--delete', help='task to delete (use name in Command Center, ex: lync_enable_server)')
 group.add_argument('--delete-all', action='store_true', help='delete all tasks in Command Center')
 args = parser.parse_args()
-# pp.pprint(args)
 
 
 def main(argv):
@@ -36,6 +38,8 @@ def main(argv):
         create_task(args.create)
     elif args.delete:
         delete_task(args.delete)
+    elif args.group:
+        generate_group_config(args.group)
     else:
         create_all_tasks()
 
@@ -72,6 +76,31 @@ def delete_all_tasks():
     for task in result['ns_task']:
         if task['category'] != 'ADMIN_USE_ONLY':
             delete_task(task['name'])
+
+def generate_group_config(groupname):
+    found_group = False
+    for group in groups:
+        if group['name'] == groupname:
+            found_group = True
+
+            lb_vservers = []
+            servicegroups = []
+            servers = []
+
+            for target_service in group['services']:
+                for service in services:
+                    if target_service == service['name']:
+                        lb_vservers.extend(service['lb_vservers'])
+                        servicegroups.extend(service['servicegroups'])
+                        for server in service['servers']:
+                            servers.append(server['name'])
+
+            print '   lb vservers: {}\n'.format(','.join(lb_vservers))
+            print '   servicegroups: {}\n'.format(','.join(servicegroups))
+            print '   servers: {}'.format(','.join(servers))
+
+    if not found_group:
+        print 'group {} not found in serviceobjects.yml'.format(groupname)
 
 def cc_create_task(tasksuffix, service):
     template = JINENV.get_template('template_{}.yml'.format(tasksuffix))

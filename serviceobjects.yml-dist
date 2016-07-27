@@ -1,3 +1,13 @@
+groups:
+    -
+        name: command_center_group1
+        services:
+            - exampleservicename
+            - anotherservice
+    -
+        name: command_center_group2
+        services:
+            - yetanotherservice
 services:
     -
         name: exampleservicename
@@ -9,6 +19,7 @@ services:
             - bind_servicegroup_server
             - bind_servicegroup_monitor
             - bind_lb_vserver_servicegroup
+            - disable_server_graceful
         servers:
             -
                 name: example1
@@ -42,3 +53,17 @@ services:
             -
                 name: something2
                 ip: 10.0.1.2
+    -
+        name: yetanotherservice
+        tasks:
+            - enable_server
+            - disable_server_graceful
+        servers:
+            -
+                name: serv1
+                ip: 10.0.2.1
+            -
+                name: serv2
+                ip: 10.0.2.2
+        servicegroups:
+            - sg_yas
