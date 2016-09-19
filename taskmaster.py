@@ -22,17 +22,23 @@ with open(SCRIPTPATH + '/config.yml', 'r') as configfile:
     ENDPOINT_BASE = config['endpoint_base']
 
 # setup command line options
-parser = argparse.ArgumentParser(description='Manage Citrix Command Center custom tasks', epilog='If a specific TASK is not specified, all tasks will be recreated.')
+parser = argparse.ArgumentParser(description='Manage Citrix Command Center custom tasks')
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-g', '--group', help='generate config values for provided group')
+group.add_argument('-r', '--recreate', help='recreate tasks for provided service')
 group.add_argument('-c', '--create', help='task to create (use name in Command Center, ex: lync_enable_server)')
 group.add_argument('-d', '--delete', help='task to delete (use name in Command Center, ex: lync_enable_server)')
 group.add_argument('--delete-all', action='store_true', help='delete all tasks in Command Center')
+group.add_argument('--create-all', action='store_true', help='create all tasks in Command Center')
 args = parser.parse_args()
 
 
 def main(argv):
-    if args.delete_all:
+    if args.recreate:
+        recreate_service(args.recreate)
+    elif args.create_all:
+        create_all_tasks()
+    elif args.delete_all:
         delete_all_tasks()
     elif args.create:
         create_task(args.create)
@@ -41,7 +47,7 @@ def main(argv):
     elif args.group:
         generate_group_config(args.group)
     else:
-        create_all_tasks()
+        parser.print_help()
 
 def create_task(taskname):
     (target_service, target_tasksuffix) = parse_task_argument(taskname)
@@ -76,6 +82,15 @@ def delete_all_tasks():
     for task in result['ns_task']:
         if task['category'] != 'ADMIN_USE_ONLY':
             delete_task(task['name'])
+
+def recreate_service(servicename):
+    for service in services:
+        if servicename != service['name']:
+            continue
+        print 'recreating tasks for {}...'.format(servicename)
+        for task in service['tasks']:
+            cc_create_task(task, service)
+            print 'created task {}_{}'.format(servicename, task)
 
 def generate_group_config(groupname):
     found_group = False
