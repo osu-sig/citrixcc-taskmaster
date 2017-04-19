@@ -1,5 +1,5 @@
 name: {{service['name']}}_enable_monitor
-description: enable/disable {{service['name']}} monitors
+description: enable or disable {{service['name']}} monitors
 owner: root
 classification: custom
 category: DEV

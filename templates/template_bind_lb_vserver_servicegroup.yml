@@ -1,5 +1,5 @@
 name: {{service['name']}}_bind_lb_vserver_servicegroup
-description: bind/unbind {{service['name']}} lb vserver to servicegroup
+description: bind or unbind {{service['name']}} lb vserver to servicegroup
 owner: root
 classification: custom
 category: DEV

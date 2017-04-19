@@ -1,5 +1,5 @@
 name: {{service['name']}}_enable_server
-description: enable/disable {{service['name']}} servers
+description: enable or disable {{service['name']}} servers
 owner: root
 classification: custom
 category: DEV

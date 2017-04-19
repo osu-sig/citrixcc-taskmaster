@@ -1,5 +1,5 @@
 name: {{service['name']}}_enable_lb_vserver
-description: enable/disable {{service['name']}} lb vservers
+description: enable or disable {{service['name']}} lb vservers
 owner: root
 classification: custom
 category: DEV

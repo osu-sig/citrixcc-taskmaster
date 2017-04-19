@@ -1,5 +1,5 @@
 name: {{service['name']}}_enable_servicegroup
-description: enable/disable {{service['name']}} servicegroups
+description: enable or disable {{service['name']}} servicegroups
 owner: root
 classification: custom
 category: DEV

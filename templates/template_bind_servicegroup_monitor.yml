@@ -1,5 +1,5 @@
 name: {{service['name']}}_bind_servicegroup_monitor
-description: bind/unbind {{service['name']}} servicegroup with a monitor
+description: bind or unbind {{service['name']}} servicegroup with a monitor
 owner: root
 classification: custom
 category: DEV

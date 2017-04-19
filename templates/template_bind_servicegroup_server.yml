@@ -1,5 +1,5 @@
 name: {{service['name']}}_bind_servicegroup_server
-description: bind/unbind {{service['name']}} servicegroup with a server
+description: bind or unbind {{service['name']}} servicegroup with a server
 owner: root
 classification: custom
 category: DEV
