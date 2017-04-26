@@ -32,6 +32,13 @@ group.add_argument('--delete-all', action='store_true', help='delete all tasks i
 group.add_argument('--create-all', action='store_true', help='create all tasks in Command Center')
 args = parser.parse_args()
 
+# specify cipher set
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
+try:
+    requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
+except AttributeError:
+    # no pyopenssl support used / needed / available
+    pass
 
 def main(argv):
     if args.recreate:
