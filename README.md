@@ -4,6 +4,8 @@ Create custom tasks in Citrix Command Center
 
 ## Requirements
 
+* Python 2.7.x
+
 ```
 $ cat requirements.txt
 Jinja2==2.8
