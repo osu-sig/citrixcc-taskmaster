@@ -3,6 +3,6 @@ chardet==3.0.4
 idna==2.7
 Jinja2==2.10.1
 MarkupSafe==0.23
-PyYAML==3.11
+PyYAML==5.1
 requests==2.20.0
 urllib3==1.24
